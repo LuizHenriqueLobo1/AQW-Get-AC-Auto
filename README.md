@@ -1,4 +1,4 @@
-## AQW GET AC AUTO
+# AQW GET AC AUTO
 
 This project is not about a bot or any cheat in the game, its purpose is just to automate a short process in order to learn a little more about **Python** and **PyAutoGUI**.
 
