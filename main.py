@@ -2,10 +2,25 @@ import pyautogui
 import time
 import os
 
+paths = {
+	"icon":        "targets/aqw_icon.PNG",
+	"exclamation": "targets/aqw_exclamation.PNG",
+	"viewAd":      "targets/aqw_view_ad.PNG",
+	"getReward":   "targets/aqw_get_reward.PNG",
+	"confirm":     "targets/aqw_confirm.PNG"
+}
+
+errors = [
+	"(YOUR AQW IS CLOSED)",
+	"(THE EXCLAMATION WAS NOT FOUND)",
+	"(YOU CAN'T DO MORE TODAY)"
+]
+
 def main():
 	option = ""
 	while True:
-		menu()
+		clear()
+		print(menu)
 		option = input("\n- ")
 		if option == "1":
 			run()
@@ -15,60 +30,40 @@ def main():
 			quit()
 
 def run():
-	if openGame():
+	if clickTarget(paths["icon"]):
 		join()
 		getCoins()
 	else:
-		isClosed()
-
-def openGame():
-	status = True
-	icon = pyautogui.locateOnScreen('targets/aqw_icon.PNG')
-	if icon != None:
-		pyautogui.click(icon)
-	else:
-		status = False
-	return status
+		error(errors[0])
 
 def join():
 	pyautogui.press(['enter'])
-	pyautogui.keyUp('enter')
 	pyautogui.write('/join ballyhoo')
 	pyautogui.press(['enter'])
-	pyautogui.keyUp('enter')
 	time.sleep(2)
 
 def getCoins():
 	for i in range(3):
 		time.sleep(1)
-		if openExclamation():
+		if clickTarget(paths["exclamation"]):
 			time.sleep(1)
-			if openAd():
+			if clickTarget(paths["viewAd"]):
 				time.sleep(1)
-				pyautogui.click('targets/aqw_get_reward.PNG')
+				pyautogui.click(paths["getReward"])
 				time.sleep(1)
-				pyautogui.click('targets/aqw_confirm.PNG')
+				pyautogui.click(paths["confirm"])
 			else:
-				todayOver()
+				error(errors[2])
 				break
 		else:
-			exclamationNotFound()
+			error(errors[1])
 			break
 
-def openExclamation():
+def clickTarget(path):
 	status = True
-	exclamation = pyautogui.locateOnScreen('targets/aqw_exclamation.PNG')
-	if exclamation != None:
-		pyautogui.click(exclamation)
-	else:
-		status = False
-	return status
-
-def openAd():
-	status = True
-	ad = pyautogui.locateOnScreen('targets/aqw_view_ad.PNG')
-	if ad != None:
-		pyautogui.click(ad)
+	target = pyautogui.locateOnScreen(path)
+	if target != None:
+		pyautogui.click(target)
 	else:
 		status = False
 	return status
@@ -76,22 +71,13 @@ def openAd():
 def loop(string):
 	while True:
 		option = input(string)
-
 		if option != None:
 			break
-
-def clear():
-	os.system('cls' if os.name == 'nt' else 'clear')
 
 def help():
 	while True:
 		clear()
-		print("-----------------------------------")
-		print("| TO RUN THIS AUTOMATION,         |")
-		print("| YOU MUST BE LOGGED IN TO AQW,   |")
-		print("| YOUR AQW MUST BE IN FULL SCREEN |")
-		print("| AND YOU MUST BE USING FULL HD   |")
-		print("-----------------------------------")
+		print(helpBoard)
 		loop("PRESS ENTER TO BACK...")
 		break
 
@@ -99,49 +85,46 @@ def quit():
 	print("\nSEE YOU LATER :)\n")
 	exit()
 
-def isClosed():
-	print("\n-----------")
-	print("| ERROR 1 |")
-	print("-----------")
-	print("(YOUR AQW IS CLOSED)")
+def error(message):
+	print(errorBoard + message)
 	loop("PRESS ENTER TO TRY AGAIN...")
 
-def todayOver():
-	print("\n-----------")
-	print("| ERROR 2 |")
-	print("-----------")
-	print("(YOU CAN'T DO MORE TODAY)")
-	loop("PRESS ENTER TO TRY AGAIN...")
+def clear():
+	os.system('cls' if os.name == 'nt' else 'clear')
 
-def exclamationNotFound():
-	print("\n-----------")
-	print("| ERROR 3 |")
-	print("-----------")
-	print("(THE EXCLAMATION WAS NOT FOUND)")
-	loop("PRESS ENTER TO TRY AGAIN...")
+menu = """
+                    .
+                   / V\\
+                 / `  /
+                <<   |
+                /    |
+              /      |
+            /        |
+          /    \  \ /
+         (      ) | |		  
+  _______|   _/_  | |
+<_________\______)\__)
+------------------------
+|  GET AC AUTO IN AQW  |
+------------------------
+(1). RUN
+(2). HELP
+(3). QUIT
+"""
 
-def wolf():
-	clear()
-	print("                    .")
-	print("                   / V\\") 
-	print("                 / `  /")
-	print("                <<   |")
-	print("                /    |")
-	print("              /      |")
-	print("            /        |")
-	print("          /    \  \ /")
-	print("         (      ) | |")
-	print("  _______|   _/_  | |")
-	print("<_________\______)\__)")
+helpBoard = """
+-----------------------------------
+| TO RUN THIS AUTOMATION,         |
+| YOU MUST BE LOGGED IN TO AQW,   |
+| YOUR AQW MUST BE IN FULL SCREEN |
+| AND YOU MUST BE USING FULL HD   |
+-----------------------------------
+"""
 
-def menu():
-	wolf()
-	print("------------------------")
-	print("|  GET AC AUTO IN AQW  |")
-	print("------------------------")
-	print("(1). RUN")
-	print("(2). HELP")
-	print("(3). QUIT")
-
+errorBoard = """
+---------
+| ERROR |
+---------
+"""
 
 main()
